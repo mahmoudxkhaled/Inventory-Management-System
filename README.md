@@ -6,15 +6,19 @@ Dashboard Insights:
 Navigate through our intuitive dashboard to access key insights at a glance. Monitor real-time metrics, track sales trends, and get a comprehensive overview of your retail performance.
 
 Categories Management: 
+
 Effortlessly organize your products by managing categories. Add, edit, or delete categories to streamline your inventory and enhance product organization.
 
 Product Listings: 
+
 Explore and showcase your products effortlessly. Add new products, edit details with ease, and keep your inventory up-to-date.
 
 Analytics and Trends: 
+
 Unlock powerful analytics tools to delve into your sales data. Identify top-performing products, analyze sales trends, and make informed decisions to boost your business.
 
 Showcase Your Products: 
+
 In addition to managing your retail operations, our website allows you to showcase your products to a wider audience. Enhance your online presence, attract customers, and drive sales by displaying your products with style.
 
 Why Choose Our Retail System?
