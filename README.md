@@ -24,6 +24,8 @@ Showcase Your Products:
 In addition to managing your retail operations, our website allows you to showcase your products to a wider audience. Enhance your online presence, attract customers, and drive sales by displaying your products with style.
 
 Why Choose Our Retail System?
+
+Powered by .NET Core and Blazor: Harness the latest technologies for a robust, scalable, and high-performance retail management experience.
 User-Friendly Interface: Our website and dashboard are designed for ease of use, ensuring a seamless experience for users at all levels.
 
 Real-Time Data: Access up-to-the-minute data to make informed decisions and stay ahead in the dynamic retail environment.
@@ -33,8 +35,9 @@ Comprehensive Management: Efficiently manage products, categories, and analytics
 Insightful Analytics: Gain valuable insights into sales trends, product performance, and customer behavior to optimize your business strategy.
 
 Get Started Today!
-Experience the power of our Retail System Website. Whether you are a small business or a large enterprise, our platform is tailored to meet your retail needs. Start exploring, managing, and thriving in the world of retail.
 
-If you have any questions or need assistance, feel free to explore our documentation.
+Experience the power of our Retail System Website, built on the robust foundation of .NET Core and Blazor. Whether you are a small business or a large enterprise, our platform is tailored to meet your retail needs. Start exploring, managing, and thriving in the world of retail technology.
 
-Welcome to a smarter way of retail management!
+If you have any questions or need assistance, feel free to explore our documentation or reach out to our dedicated support team.
+
+Welcome to a smarter way of retail management, driven by the innovation of .NET Core  and Blazor!
