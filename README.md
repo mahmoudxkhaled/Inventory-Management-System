@@ -2,7 +2,9 @@ Welcome!
 Welcome to the Retail System Website, where managing your retail operations becomes effortless. Our user-friendly interface and powerful dashboard provide you with the tools to access real-time data, efficiently manage products and categories, and gain valuable insights into every facet of your retail system.
 
 Explore the Features: -
+
 Dashboard Insights: 
+
 Navigate through our intuitive dashboard to access key insights at a glance. Monitor real-time metrics, track sales trends, and get a comprehensive overview of your retail performance.
 
 Categories Management: 
