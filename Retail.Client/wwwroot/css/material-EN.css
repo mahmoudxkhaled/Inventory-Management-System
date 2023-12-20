@@ -11624,7 +11624,7 @@ form-direction {
 
 .rz-datatable-thead th .rz-column-title {
     display: inline-block;
-    font-size: 1.3rem;
+    font-size: 1rem;
     text-transform: capitalize;
     color: #fff;
     padding: 0 0 0.625rem 0.625rem;

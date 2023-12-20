@@ -5,8 +5,6 @@
 <SfGrid DataSource="@products" AllowPaging="true" Height="200" AllowExcelExport="true" AllowPdfExport="true" @ref="ProductGrid" Toolbar=@ToolbarItems>
     
     <GridColumns>
-
-        <GridColumn Field=@nameof(ProductDto.ID) HeaderText="ID" IsPrimaryKey="true" Width="200"></GridColumn>
         <GridColumn Field=@nameof(ProductDto.NAME) HeaderText="NAME" Width="200"></GridColumn>
         <GridColumn Field=@nameof(ProductDto.QTY) HeaderText="QTY" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" Width="50"></GridColumn>
         <GridColumn Field=@nameof(ProductDto.PRICE) HeaderText="PRICE" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" Width="70"></GridColumn>
