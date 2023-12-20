@@ -1,0 +1,203 @@
+﻿@page "/"
+@layout MainPageLayout
+@using Microsoft.AspNetCore.Hosting;
+@inject IWebHostEnvironment webHostEnvironment
+@inject ProductService ProServ
+
+
+
+<link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="assets/cssIntro/style.css" rel="stylesheet">
+@if (productsList == null)
+{
+    <div class="spinner" ></div>
+
+}
+else
+{
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-Products-center">
+    <div class="container position-relative text-center text-lg-start" data-aos="zoom-in" data-aos-delay="100">
+        <div class="row">
+            <div class="col-lg-8 ">
+                <h1 style=" text-shadow: 2px 2px 4px black ; margin-top:100px">
+                    Welcome to <span class="waviy">
+                        <span style="--i:1">7</span>
+                        <span style="--i:2">O</span>
+                        <span style="--i:3">D</span>
+                        <span style="--i:4">A</span>
+                        <span style="--i:5"> </span>
+                        <span style="--i:6">S</span>
+                        <span style="--i:7">H</span>
+                        <span style="--i:8">O</span>
+                        <span style="--i:9">P</span>
+                    </span>
+                </h1>
+
+
+                <div class="row">
+                    <div class="btns">
+                        <a href="#menu" class="btn-menu animated fadeInUp scrollto text-center" style="text-decoration: none;">
+                            Our <u style="text-decoration: none;">Menu</u>
+                        </a>
+
+                        <a href="/ProductsList" class="btn-menu animated fadeInUp scrollto text-center" style="text-decoration: none;">
+                             <u style="text-decoration: none;">DashBoard</u>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+</section><!-- End Hero -->
+
+<main id="main">
+
+
+    <!-- ======= Menu Section ======= -->
+    <section id="menu" class="menu section-bg">
+        <div class="container" data-aos="fade-up">
+
+            <div class="section-title">
+                <h2>Menu</h2>
+                <p>Buy Your World</p>
+            </div>
+
+            <div class="row" data-aos="fade-up" data-aos-delay="100">
+
+                <div class="col-lg-12 d-flex justify-content-center">
+                    <ul id="menu-flters">
+                        <li class="filter-active" @onclick="GetAllProducts">All</li>
+
+                        @foreach (var Group in Groups)
+                        {
+
+                            <li @onclick="(e) => UpdateFilter(e, Group.ID)">@Group.NAME</li>
+
+                        }
+
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="row menu-container" data-aos="fade-up" data-aos-delay="100">
+                @foreach (var item in Products)
+                {
+                    <div class="col-lg-6 menu-item filter-specialty">
+
+                            <a style="text-decoration: none;" href="#">
+                                @item.NAME
+                            </a>
+
+                            @if (!string.IsNullOrEmpty(item.PIC))
+                            {
+                                <img src="@item.PIC" class="menu-img" alt="Item Image">
+                            }
+                            else
+                            {
+                                <img src="/images/123.jpg" class="menu-img" alt="Default Image">
+                            }
+
+                        <div class="menu-content">
+
+                            <a style="text-decoration: none;" href="#">@item.NAME </a>
+
+                            <span>@(item.PRICE) EGP</span>
+                        </div>
+                        <div class="menu-ingredients">
+                           
+                                <span dir="ltr" style="left:0px">
+                                    @item.DESCRIPTION
+                                </span>
+
+                                <br />
+
+                        </div>
+
+                    </div>
+
+                }
+            </div>
+
+        </div>
+    </section><!-- End Menu Section -->
+
+
+</main><!-- End #main -->
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Smooth scroll to the menu section
+        $("a.btn-menu").click(function () {
+            var target = $("#menu");
+            if (target.length) {
+                $("html, body").animate({
+                    scrollTop: target.offset().top
+                }, 100);
+            }
+        });
+    });
+</script>
+
+
+@code {
+
+
+    public List<ProductDto> productsList = new();
+    private List<ProductDto> Products = new();
+    private List<CategoryDto> Groups = new List<CategoryDto>();
+    private Guid selectedFilter;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllProducts();
+
+        Groups = await CatServ.GetAllCategories();
+
+        ProServ.GetAllProducts();
+        Products = await ProServ.GetAllProducts();
+
+    }
+
+
+
+    private async Task UpdateFilter(MouseEventArgs e, Guid itemGroupCode)
+    {
+        selectedFilter = itemGroupCode;
+        Products = await ProServ.GetProductsByCategoryId(selectedFilter);
+
+        // Check if the Products list is null and replace it with an empty list
+        Products ??= new List<ProductDto>();
+
+        StateHasChanged();
+    }
+
+
+    private async Task GetAllProducts()
+    {
+        Products = await ProServ.GetAllProducts();
+
+        StateHasChanged();
+    }
+
+
+
+    private string GetImageSource(Guid itemCode)
+    {
+        var imagePath = Path.Combine("Menu_Pic", $"{itemCode}.jpg");
+
+        if (System.IO.File.Exists(Path.Combine(webHostEnvironment.WebRootPath, imagePath)))
+        {
+            return imagePath;
+        }
+
+        return "assets/img/about-bg.jpg";
+    }
+
+
+}

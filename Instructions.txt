@@ -1,0 +1,7 @@
+ ----Running the Application----
+1. Get Source Code From GitHub=> https://github.com/mahmoudxkhaled/Inventory-Management-System.git
+2. Make sure the startup project “Retail.API”.
+3. Make sure migration is on “Retail.DAL”. [ Add-Migration and Update-DataBase ]
+4. Check your Local database and you will find “RetailBusiness” database there.
+5. Make sure “Retail.API” and “Retail.Client” as startup project from Configure Startup projects.
+6. Build and Run.

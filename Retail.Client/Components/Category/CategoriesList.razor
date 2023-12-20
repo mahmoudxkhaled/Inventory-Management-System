@@ -1,0 +1,103 @@
+﻿@page "/CategoriesList"
+
+@layout RetailLayout
+@inject NavigationManager Navigate
+@inject DialogService DialogService
+@inject CategoryService CatServ
+
+
+<div class="col-md-6">
+	<h1 class="h1 float-left grid-h1 " >Categories List</h1>
+</div>
+<div class="row head">
+
+
+
+	<div class="col-md-12">
+		<RadzenButton class="btn-blue" Style="float: right; margin-right:3px;" Text="Create New Category" Click="btnAddClick" />
+		<RadzenButton class="btn-blue" Style="float: right; margin-right:3px;" Text="Analysis Diagramss" Click="btnChartClick" />
+	</div>
+
+</div>
+
+@if (CategoryList == null)
+{
+    <div class="spinner" ></div>
+
+}
+else
+{
+<div class="wrapper">
+	<RadzenCard class="grid-card">
+			<div class="row">
+				<div class="col-md-12">
+					<RadzenGrid FilterMode="FilterMode.Advanced" @ref="CategoryGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+								AllowScrolling="true" AllowSorting="true" Data="@CategoryList" TItem="CategoryDto"
+								Value="@CategoryGridRow"
+								AllowAdd="true">
+						<Columns>
+							<RadzenGridColumn TItem="CategoryDto" Property="ID" Title="ID" Filterable="false" Width="120px" TextAlign="TextAlign.Center" />
+
+
+							<RadzenGridColumn TItem="CategoryDto" Property="NAME" Title="NAME" Filterable="true" Width="60px" TextAlign="TextAlign.Center" />
+
+
+							<RadzenGridColumn TItem="CategoryDto" Property="DESCRIPTION" Title="DESCRIPTION" Filterable="true" Width="140px" TextAlign="TextAlign.Center" />
+
+
+							<RadzenGridColumn TItem="CategoryDto" Context="CategoryDto" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="80px">
+
+								<Template Context="CategoryDto">
+									<RadzenButton class="btn-blue-details" Size="ButtonSize.Small" Text="Edit"  Click="@(args => btnEditClick(args, CategoryDto))">
+									</RadzenButton>
+								</Template>
+							</RadzenGridColumn>
+						</Columns>
+					</RadzenGrid>
+				</div>
+			</div>
+	</RadzenCard>
+</div>
+
+}
+@code {
+
+
+	RadzenGrid<CategoryDto> CategoryGrid;
+	public List<CategoryDto> CategoryList { get; set; }
+	CategoryDto CategoryGridRow;
+	private CategoryDto curData = new CategoryDto();
+
+	protected override async Task OnInitializedAsync()
+	{
+		CategoryList = await CatServ.GetAllCategories();
+		StateHasChanged();
+
+	}
+
+
+	private async Task btnAddClick(MouseEventArgs e)
+	{
+
+		Navigate.NavigateTo("/CategorySetup/" + 1);
+		StateHasChanged();
+	}
+
+	private async Task btnEditClick(MouseEventArgs e, CategoryDto CategoryDto)
+	{
+
+		Navigate.NavigateTo("/CategorySetup/" + 2 + "/" + CategoryDto.ID);
+		curData = await CatServ.GetCategoryById(CategoryDto.ID);
+		StateHasChanged();
+
+	}
+
+	private async Task btnChartClick(MouseEventArgs e)
+	{
+		await DialogService.OpenAsync<CategoryChart>("",
+							new Dictionary<string, object>() { },
+							new DialogOptions() { Width = "700px", Resizable = true, Draggable = true });
+
+	}
+
+}

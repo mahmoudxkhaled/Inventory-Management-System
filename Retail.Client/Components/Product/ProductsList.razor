@@ -1,0 +1,139 @@
+﻿@page "/ProductsList"
+@inject DialogService DialogService
+@layout RetailLayout
+@inject NavigationManager Navigate
+@inject ProductService ProServ
+
+
+      
+<div class="col-md-6">
+    <h1 class="h1 float-left grid-h1">Products List</h1>
+</div>
+<div class="row head">
+    <div class="col-md-4">
+    </div>
+
+    <div class="col-md-12 ms-auto">
+        <RadzenButton class="btn-blue" Style="float: right; margin-right:3px;" Text="Print Report" Click="btnPrintClick" />
+        <RadzenButton class="btn-blue" Style="float: right; margin-right:3px; background: brown !important;" Text="Not In Stock" Click="btnQuickViewClick" />
+        <RadzenButton class="btn-blue" Style="float: right; margin-right:3px;" Text="Analysis Diagram" Click="btnChartClick" />
+        <RadzenButton class="btn-blue" Style="float: right; margin-right:3px;" Text="Create New Product" Click="btnAddClick" />
+    </div>
+</div>
+@if (ProductList == null)
+{
+    <div class="spinner" ></div>
+}
+else
+{
+
+<div class="wrapper">
+    <RadzenCard class="grid-card">
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenGrid FilterMode="FilterMode.Advanced" @ref="ProductGrid" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                            AllowScrolling="true" AllowSorting="true" Data="@ProductList" TItem="ProductDto"
+                            Value="@ProductGridRow"
+                            AllowAdd="true">
+                    <Columns>
+                            <RadzenGridColumn TItem="ProductDto"  Property="ID" Title="ID" Filterable="false"   Width="140px" />
+
+                        <RadzenGridColumn TItem="ProductDto" Property="NAME" Title="NAME" Filterable="true" Width="140px" />
+
+                        <RadzenGridColumn TItem="ProductDto" Property="PRICE" Title="PRICE" Filterable="true" Width="90px" TextAlign="Radzen.TextAlign.Center" />
+                       
+                        <RadzenGridColumn TItem="ProductDto" Property="QTY" Title="QTY" Filterable="true" Width="90px" TextAlign="Radzen.TextAlign.Center" />
+
+                        <RadzenGridColumn TItem="ProductDto" Property="DESCRIPTION" Title="DESCRIPTION" Filterable="true" Width="160px" />
+                        
+                        <RadzenGridColumn TItem="ProductDto" Property="CATEGORY_NAME" Title="CATEGORY" Filterable="true" Width="120px"  TextAlign="Radzen.TextAlign.Center" />
+
+                        <RadzenGridColumn TItem="ProductDto" Context="ProductDto" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+
+                            <Template Context="ProductDto">
+                                <RadzenButton class="btn-blue-details" Size="ButtonSize.Small" Text="Details" Click="@(args => btnDetailClick(args, ProductDto))">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
+                        <RadzenGridColumn TItem="ProductDto" Context="ProductDto" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="100px">
+
+                            <Template Context="ProductDto">
+                                <RadzenButton class="btn-blue-details" Size="ButtonSize.Small" Text="Edit" Click="@(args => btnEditClick(args, ProductDto))">
+                                </RadzenButton>
+                            </Template>
+                        </RadzenGridColumn>
+                    </Columns>
+                </RadzenGrid>
+            </div>
+        </div>
+    </RadzenCard>
+</div>
+
+}
+
+@code {
+
+
+    RadzenGrid<ProductDto> ProductGrid;
+    public List<ProductDto> ProductList;
+    ProductDto ProductGridRow;
+    private ProductDto curData = new ProductDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        ProductList = await ProServ.GetAllProducts();
+        StateHasChanged();
+
+    }
+
+    private async Task btnAddClick(MouseEventArgs e)
+    {
+        Navigate.NavigateTo("/ProductSetup/" + 1);
+        StateHasChanged();
+    }
+
+       private async Task btnPrintClick(MouseEventArgs e)
+    {
+        await DialogService.OpenAsync<PrintPdf>("",
+                   new Dictionary<string, object>() { },
+                   new DialogOptions() { Width = "700PX", Resizable = true, Draggable = true });
+
+    }
+
+    private async Task btnQuickViewClick(MouseEventArgs e)
+    {
+        await DialogService.OpenAsync<ShortListProducts>("",
+                   new Dictionary<string, object>() { },
+                   new DialogOptions() { Width = "700PX", Resizable = true, Draggable = true });
+
+    }
+
+    private async Task btnChartClick(MouseEventArgs e)
+    {
+        await DialogService.OpenAsync<ProductChart>("",
+                   new Dictionary<string, object>() { },
+                   new DialogOptions() { Width = "1500PX", Resizable = true, Draggable = true });
+
+    }
+
+    private async Task btnEditClick(MouseEventArgs e, ProductDto ProductDto)
+    {
+
+        Navigate.NavigateTo("/ProductSetup/" + 2 + "/" + ProductDto.ID);
+        curData = await ProServ.GetProductById(ProductDto.ID);
+        StateHasChanged();
+
+    }
+
+    
+    private async Task btnDetailClick(MouseEventArgs e, ProductDto ProductDto)
+    {
+        await DialogService.OpenAsync<ProductDetails>($"Product Details",
+              new Dictionary<string, object>() { { "ProductID", ProductDto.ID.ToString() } },
+              new DialogOptions() { Width = "600PX", Resizable = true, Draggable = true });
+    }
+
+ 
+
+}

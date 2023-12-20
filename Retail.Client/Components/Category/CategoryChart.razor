@@ -1,0 +1,44 @@
+﻿@page "/CategoryChart"
+
+<div class="row head" style="padding:0">
+    <div class="col-md-12 pb-4">
+        <h1 class="h1 grid-h1 text-center m-auto" style="font-size:33px">Category Name VS Number of its Products </h1>
+    </div>
+</div>
+
+<div class="rz-p-0 rz-p-md-12">
+    <RadzenChart>
+        <RadzenColumnSeries Data="@revenue" CategoryProperty="CategoryName"  ValueProperty="TotalQty" />
+    </RadzenChart>
+</div>
+
+@code {
+    public List<ProductDto> ProductList;
+    DataItem[] revenue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProServ.GetAllProducts();
+        PopulateRevenueArray();
+    }
+
+    private void PopulateRevenueArray()
+    {
+        var groupedData = ProductList.GroupBy(product => product.CATEGORY_NAME)
+            .Select(group => new DataItem
+                {
+                    CategoryName = group.Key,
+                    TotalQty = group.Sum(product => product.QTY)
+                });
+
+        revenue = groupedData.ToArray();
+
+        StateHasChanged();
+    }
+
+    class DataItem
+    {
+        public string CategoryName { get; set; }
+        public double TotalQty { get; set; }
+    }
+}

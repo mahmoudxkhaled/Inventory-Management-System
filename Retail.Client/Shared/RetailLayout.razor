@@ -1,0 +1,54 @@
+﻿  @inherits LayoutComponentBase
+
+<RadzenLayout>
+	<RadzenHeader>
+		<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+			<RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+			<RadzenLabel Text="Retail Dashboard" />
+		</RadzenStack>
+	</RadzenHeader>
+	<RadzenSidebar Responsive="false" Style="width: max-content">
+		<RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
+			<RadzenPanelMenuItem Text="Back To Website" Icon="home" Click="@(() => NavigateTo(""))" />
+
+			<RadzenPanelMenuItem Text="Categories" Icon="dashboard" Click="@(() => NavigateTo("CategoriesList"))" />
+
+			<RadzenPanelMenuItem Text="Products" Icon="dashboard" Click="@(() => NavigateTo("ProductsList"))" />
+		</RadzenPanelMenu>
+	</RadzenSidebar>
+	<RadzenBody>
+		<div class="rz-p-4">
+
+
+			@if (Body == null)
+			{
+				<ProductsList/>
+			}
+			else
+			{
+				@Body
+			}
+		</div>
+
+
+	</RadzenBody>
+
+	<div class="col-md-auto text-md-right  fixed-bottom">
+		<RadzenLabel class="arabic-footer" Text="Raya Trade/ Mahmoud Khaled - Software Engineer, Copyright &copy; 2023">
+		</RadzenLabel>
+	</div>
+</RadzenLayout>
+
+<RadzenDialog />
+<RadzenContent />
+<RadzenTooltip />
+<RadzenNotification />
+@code {
+	void NavigateTo(string page)
+	{
+		NavigationManager.NavigateTo($"/{page}");
+	}
+
+
+	bool sidebarExpanded = true;
+}

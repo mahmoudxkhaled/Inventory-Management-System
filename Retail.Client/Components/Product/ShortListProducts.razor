@@ -1,0 +1,52 @@
+﻿@page "/PRINT"
+@inject DialogService DialogService
+@layout RetailLayout
+@inject NavigationManager Navigate
+@inject ProductService ProServ
+@inject CategoryService CatServ
+
+<style>
+    --rz-checkbox-checked-icon-background-color: initial !important;
+</style>
+
+<div class="row head" style="padding:0">
+    <div class="col-md-12">
+        <h1 class="h1 float-left grid-h1">Products List Not In Stock</h1>
+    </div>
+    <div class="col-md-6"></div>
+</div>
+
+<div class="wrapper">
+    <RadzenCard class="grid-card">
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenDataGrid @ref="ProductGrid" PageSize="9" AllowColumnPicking="true" AllowFiltering="false" AllowPaging="true" AllowSorting="true" Data="@ProductList" TItem="ProductDto">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="ProductDto" Property="ID" Title="ID" Filterable="true" Width="120px" />
+                        <RadzenDataGridColumn TItem="ProductDto" Property="NAME" Title="NAME" Filterable="true" Width="140px" />
+                        <RadzenDataGridColumn TItem="ProductDto" Property="QTY" Title="QTY" Filterable="true" Width="80px" TextAlign="Radzen.TextAlign.Center">
+                            <Template Context="data">
+                                <div style="color: @(data.QTY == 0 ? "white" : "inherit"); background-color: @(data.QTY == 0 ? "red" : "inherit")">
+                                    @data.QTY
+                                </div>
+                            </Template>
+                        </RadzenDataGridColumn>
+                        <RadzenDataGridColumn TItem="ProductDto" Property="CATEGORY_NAME" Title="CATEGORY" Filterable="true" Width="140px" TextAlign="Radzen.TextAlign.Center" />
+                    </Columns>
+                </RadzenDataGrid>
+            </div>
+        </div>
+    </RadzenCard>
+</div>
+
+@code {
+    RadzenDataGrid<ProductDto> ProductGrid;
+    public IEnumerable<ProductDto> ProductList;
+    private ProductDto curData = new ProductDto();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var allProducts = await ProServ.GetAllProducts();
+        ProductList = allProducts.Where(product => product.QTY == 0);
+    }
+}

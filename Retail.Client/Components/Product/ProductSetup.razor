@@ -1,0 +1,343 @@
+﻿@page "/ProductSetup/{EntryType:int}/{ProductID?}"
+@using BlazorInputFile;
+@inject ProductService ProServ
+@inject CategoryService CatServ
+@inject NavigationManager NavigationManager;
+@layout RetailLayout
+@inject Radzen.DialogService dialogService;
+
+@if (curData == null)
+{
+    <div class="spinner" ></div>
+}
+else
+{
+
+<RadzenTemplateForm Data="@curData" Submit="@((ProductDto args) => { OnSubmit(args); })" InvalidSubmit=@OnInvalidSubmit>
+
+    <div class="row head">
+        <div class="col-md-12">
+            <h1 class="h1 float-left grid-h1">Product Setup</h1>
+        </div>
+        <div class="col-md-12">
+            <RadzenButton Disabled="@AllowDelete" class="btn-delete-gray" Style="margin-right:5px; float: right;" Text="Delete" Click="@((args) => btnDeleteClick(args, curData))" />
+            <RadzenButton class="btn-save" Style="margin-right:5px; float: right;" Text="Save" ButtonType="Radzen.ButtonType.Submit" />
+            <RadzenButton class="btn-save-new" Style="margin-right:5px; float: right;" Text="SaveAndNew" Click="SaveAndNewClick" />
+            <RadzenButton class="cancel" Style="margin-right:5px; float: right;" Text="Cancel" Click="btnCancelClick" />
+            <RadzenButton class="btn-save-new" Style="margin-right:5px;float: right;" Icon="arrow_back" Click="@btnbackClick" />
+        </div>
+    </div>
+    <RadzenCard class="grid-card">
+        <div class="row my-2">
+            <div class="col-md-6 ">
+                <div class="row">
+                    <RadzenLabel style="width: 140px; color: brown; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text="ID">
+                    </RadzenLabel>
+                    <span style="font-size:small;width: 320px;height:28px; font-weight: bold; margin-top:5px;">@curData.ID</span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <RadzenLabel style="width: 140px; color: brown; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text="CATEGORY">
+                    </RadzenLabel>
+                    <RadzenDropDownDataGrid style=" width: 270px;height:28px;font-size:small ;" TValue="Guid" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                                            AllowFiltering="true" AllowClear="true"
+                                            Data="@Categories"
+                                            Name="ID"
+                                            TextProperty="NAME" ValueProperty="ID" @bind-Value="@curData.CATEGORY_ID" Placeholder="Choose Category">
+                        <Columns>
+                            <RadzenDropDownDataGridColumn Property="NAME" Title=" CATEGROY NAME" Width="55px" />
+                        </Columns>
+                    </RadzenDropDownDataGrid>
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-6 ">
+                <div class="row">
+                    <RadzenLabel style="width: 140px; color: brown; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text="NAME">
+                    </RadzenLabel>
+                    <RadzenTextBox style="font-size:small;width: 270px;height:28px" Name="NAME" @bind-Value="@curData.NAME">
+                    </RadzenTextBox>
+                    <RadzenRequiredValidator Component="NAME" Text=" NAME is required" Popup="true" Style="position: absolute; width: 110px; margin-top:20px; padding:0px; padding-left:10px" />
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="row">
+                    <RadzenLabel style="width: 140px; color: brown; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text="PRICE">
+                    </RadzenLabel>
+                    <RadzenNumeric style="font-size:small;width: 270px;height:28px" Name="PRICE" @bind-Value="@curData.PRICE"></RadzenNumeric>
+                    <RadzenRequiredValidator Component="PRICE" Text=" PRICE is required" Popup="true" Style="position: absolute; width:150px; margin-top:20px; padding:0px; padding-left:10px" />
+                </div>
+            </div>
+        </div>
+        <div class="row my-2">
+            <div class="col-md-6 ">
+                <div class="row">
+                    <RadzenLabel style="color: brown;width: 140px; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text=" DESCRIPTION ">
+                    </RadzenLabel>
+                    <RadzenTextBox style="font-size:small;width: 270px;height:28px" Name="DESCRIPTION" @bind-Value="@curData.DESCRIPTION">
+                    </RadzenTextBox>
+                    <RadzenRequiredValidator Component="DESCRIPTION" Text=" DESCRIPTION is required" Popup="true" Style="position: absolute; width: 150px; margin-top:20px; padding:0px; padding-left:10px" />
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <div class="row">
+                    <RadzenLabel style="width: 140px; color: brown; font-weight: bold; font-size: small; text-decoration-style: solid; border-radius: 0.25rem" Text="QTY">
+                    </RadzenLabel>
+                    <RadzenNumeric style="font-size:small;width: 270px;height:28px" Name="QTY" @bind-Value="@curData.QTY"></RadzenNumeric>
+                </div>
+            </div>
+        </div>
+    </RadzenCard>
+</RadzenTemplateForm>
+}
+@code {
+
+    string DBResult = "";
+    private bool AllowDelete = true;
+    private ProductDto curData = new ProductDto();
+    List<CategoryDto> Categories;
+
+    [Parameter]
+    public string ProductID { get; set; }
+    [Parameter]
+    public int EntryType { get; set; }
+
+    async Task OnSubmit(ProductDto Obj)
+    {
+        if (Obj.CATEGORY_ID == Guid.Empty )
+        {
+            _NotificationService.Notify(MessageError("Category Is Empty"));
+            return;
+        }
+
+        var products = await ProServ.GetAllProducts();
+        var productFromDB = await ProServ.GetProductById(Obj.ID);
+
+        if (EntryType == 2)
+        {
+            AllowDelete = false;
+        }
+
+        if (products.Any(p => p.NAME == Obj.NAME) && EntryType == 1)
+        {
+            _NotificationService.Notify(MessageError("Duplicate product name. Please choose a different name."));
+            return;
+        }
+
+        // Check for duplicate names only if the name has changed during an edit
+        if (EntryType == 2 && Obj.NAME != productFromDB.NAME)
+        {
+            if (products.Any(p => p.NAME == Obj.NAME && p.ID != Obj.ID))
+            {
+                _NotificationService.Notify(MessageError("Duplicate product name. Please choose a different name."));
+                return;
+            }
+        }
+        if (productFromDB != null && Obj.ID == productFromDB.ID)
+        {
+
+            DBResult = await ProServ.UpdatePrdouct(Obj.ID, Obj);
+            if (!(DBResult.Contains("OK")))
+            {
+                _NotificationService.Notify(MessageError("Process Failed"));
+                DBResult = "";
+                return;
+            }
+            else
+            {
+
+                _NotificationService.Notify(MessageSucces);
+
+            }
+
+        }
+        else
+        {
+
+            DBResult = await ProServ.AddProduct(Obj);
+            if (!(DBResult.Contains("OK")))
+            {
+                _NotificationService.Notify(MessageError("Process Failed"));
+                DBResult = "";
+                return;
+            }
+            else
+            {
+
+                _NotificationService.Notify(MessageSucces);
+
+            }
+        }
+
+        NavigationManager.NavigateTo("/ProductsList");
+
+    }
+    async Task SaveAndNewClick()
+    {
+        // validation
+        if (curData.NAME == null || curData.NAME == "")
+        {
+            _NotificationService.Notify(MessageError("Name Is Empty"));
+            return;
+        }
+        if (curData.DESCRIPTION == null || curData.DESCRIPTION == "")
+        {
+            _NotificationService.Notify(MessageError("Description Is Empty"));
+            return;
+        }
+        if (curData.CATEGORY_ID == Guid.Empty)
+        {
+            _NotificationService.Notify(MessageError("Category Is Empty"));
+            return;
+        }
+
+        var products = await ProServ.GetAllProducts();
+        var productFromDB = await ProServ.GetProductById(curData.ID);
+
+        if (EntryType == 2)
+        {
+            AllowDelete = false;
+        }
+
+        if (products.Any(p => p.NAME == curData.NAME) && EntryType == 1)
+        {
+            _NotificationService.Notify(MessageError("Duplicate product name. Please choose a different name."));
+            return;
+        }
+
+        // Check for duplicate names only if the name has changed during an edit
+        if (EntryType == 2 && curData.NAME != productFromDB.NAME)
+        {
+            if (products.Any(p => p.NAME == curData.NAME && p.ID != curData.ID))
+            {
+                _NotificationService.Notify(MessageError("Duplicate product name. Please choose a different name."));
+                return;
+            }
+        }
+        if (productFromDB != null && curData.ID == productFromDB.ID)
+        {
+
+            DBResult = await ProServ.UpdatePrdouct(curData.ID, curData);
+            if (!(DBResult.Contains("OK")))
+            {
+                _NotificationService.Notify(MessageError("Process Failed"));
+                DBResult = "";
+                return;
+            }
+            else
+            {
+                _NotificationService.Notify(MessageSucces);
+            }
+
+        }
+        else
+        {
+            DBResult = await ProServ.AddProduct(curData);
+            if (!(DBResult.Contains("OK")))
+            {
+                _NotificationService.Notify(MessageError("Process Failed"));
+                DBResult = "";
+                return;
+            }
+            else
+            {
+                _NotificationService.Notify(MessageSucces);
+            }
+        }
+
+        EntryType = 1;
+        curData = new ProductDto();
+        curData.ID = Guid.NewGuid();
+        curData.CATEGORY_ID = Guid.Parse("E18E42B7-799E-4B3B-A084-C55D4BB5DA3F");
+        AllowDelete = true;
+
+    }
+    void OnInvalidSubmit()
+    {
+
+    }
+
+    private async Task btnDeleteClick(MouseEventArgs e, ProductDto Obj)
+    {
+
+        var taskdelete = await dialogService.Confirm("Are you sure you want to delete?", "Confirm Deletion", new ConfirmOptions()
+            {
+                OkButtonText = "Yes",
+                CancelButtonText = "No"
+            });
+
+        if (taskdelete == true)
+        {
+            DBResult = await ProServ.DeletePrdouct(Obj.ID);
+
+            if (!(DBResult.Contains("OK")))
+            {
+                DBResult = "";
+                return;
+            }
+            else
+            {
+                _NotificationService.Notify(MessageDelete);
+                curData = new ProductDto();
+            }
+            NavigationManager.NavigateTo("/ProductsList");
+        }
+
+    }
+    private async Task btnbackClick()
+    {
+        NavigationManager.NavigateTo("/ProductsList");
+
+    }
+
+    private void btnCancelClick(MouseEventArgs e)
+    {
+        _NotificationService.Notify(MessageCancel);
+
+        NavigationManager.NavigateTo("/ProductsList");
+        StateHasChanged();
+    }
+
+
+    //======================================================================================
+    protected override async Task OnInitializedAsync()
+    {
+
+
+        StateHasChanged();
+
+        if (EntryType == 2)
+        {
+            curData = await ProServ.GetProductById(Guid.Parse(ProductID));
+            AllowDelete = false;
+
+        }
+
+        if (EntryType == 1)
+        {
+            curData = new ProductDto();
+            curData.ID = Guid.NewGuid();
+            curData.CATEGORY_ID = Guid.Parse("E18E42B7-799E-4B3B-A084-C55D4BB5DA3F");
+
+        }
+        Categories = await CatServ.GetAllCategories();
+
+    }
+
+    public static readonly NotificationMessage MessageSucces =
+    new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Retail System", Detail = "Data Saved Successfully", Duration = 4000 };
+
+    public static NotificationMessage MessageError(string msg) =>
+       new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Retail System", Detail = msg, Duration = 5000 };
+
+    public static readonly NotificationMessage MessageCancel =
+    new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Retail System", Detail = "Process Canceled", Duration = 4000 };
+
+    public static readonly NotificationMessage MessageDelete =
+     new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Retail System", Detail = "Product Deleted", Duration = 4000 };
+
+
+
+}

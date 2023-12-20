@@ -1,0 +1,38 @@
+﻿@page "/PrintPdf"
+@using Syncfusion.Blazor.Grids
+ @using Syncfusion.Blazor;
+
+<SfGrid DataSource="@products" AllowPaging="true" Height="200" AllowExcelExport="true" AllowPdfExport="true" @ref="ProductGrid" Toolbar=@ToolbarItems>
+    
+    <GridColumns>
+
+        <GridColumn Field=@nameof(ProductDto.ID) HeaderText="ID" IsPrimaryKey="true" Width="200"></GridColumn>
+        <GridColumn Field=@nameof(ProductDto.NAME) HeaderText="NAME" Width="200"></GridColumn>
+        <GridColumn Field=@nameof(ProductDto.QTY) HeaderText="QTY" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" Width="50"></GridColumn>
+        <GridColumn Field=@nameof(ProductDto.PRICE) HeaderText="PRICE" TextAlign="Syncfusion.Blazor.Grids.TextAlign.Center" Width="70"></GridColumn>
+    </GridColumns>
+
+
+</SfGrid>
+@code {
+    private SfGrid<ProductDto> ProductGrid;
+    public List<string> ToolbarItems = new List<string>() { "Search", "Print" };
+    public List<ProductDto> products { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        products = await ProServ.GetAllProducts();
+    }
+
+
+}
+<style>
+    .e-toolbar{
+
+        padding:10px;
+    }
+    .e-grid .e-toolbar .e-tbar-btn .e-icons,
+    .e-grid .e-toolbar .e-toolbar-items .e-toolbar-item .e-tbar-btn {
+        background: #add8e6;
+    }
+</style>

@@ -1,0 +1,88 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\**" />
+    <Compile Remove="wwwroot\assets\img\**" />
+    <Compile Remove="wwwroot\assets\vendor\animate.css\**" />
+    <Compile Remove="wwwroot\assets\vendor\aos\**" />
+    <Compile Remove="wwwroot\assets\vendor\bootstrap-icons\**" />
+    <Compile Remove="wwwroot\assets\vendor\boxicons\**" />
+    <Compile Remove="wwwroot\assets\vendor\glightbox\**" />
+    <Compile Remove="wwwroot\assets\vendor\isotope-layout\**" />
+    <Compile Remove="wwwroot\assets\vendor\php-email-form\**" />
+    <Compile Remove="wwwroot\assets\vendor\swiper\**" />
+    <Compile Remove="wwwroot\css\open-iconic\**" />
+    <Compile Remove="wwwroot\fonts\**" />
+    <Content Remove="Data\**" />
+    <Content Remove="wwwroot\assets\img\**" />
+    <Content Remove="wwwroot\assets\vendor\animate.css\**" />
+    <Content Remove="wwwroot\assets\vendor\aos\**" />
+    <Content Remove="wwwroot\assets\vendor\bootstrap-icons\**" />
+    <Content Remove="wwwroot\assets\vendor\boxicons\**" />
+    <Content Remove="wwwroot\assets\vendor\glightbox\**" />
+    <Content Remove="wwwroot\assets\vendor\isotope-layout\**" />
+    <Content Remove="wwwroot\assets\vendor\php-email-form\**" />
+    <Content Remove="wwwroot\assets\vendor\swiper\**" />
+    <Content Remove="wwwroot\css\open-iconic\**" />
+    <Content Remove="wwwroot\fonts\**" />
+    <EmbeddedResource Remove="Data\**" />
+    <EmbeddedResource Remove="wwwroot\assets\img\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\animate.css\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\aos\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\bootstrap-icons\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\boxicons\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\glightbox\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\isotope-layout\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\php-email-form\**" />
+    <EmbeddedResource Remove="wwwroot\assets\vendor\swiper\**" />
+    <EmbeddedResource Remove="wwwroot\css\open-iconic\**" />
+    <EmbeddedResource Remove="wwwroot\fonts\**" />
+    <None Remove="Data\**" />
+    <None Remove="wwwroot\assets\img\**" />
+    <None Remove="wwwroot\assets\vendor\animate.css\**" />
+    <None Remove="wwwroot\assets\vendor\aos\**" />
+    <None Remove="wwwroot\assets\vendor\bootstrap-icons\**" />
+    <None Remove="wwwroot\assets\vendor\boxicons\**" />
+    <None Remove="wwwroot\assets\vendor\glightbox\**" />
+    <None Remove="wwwroot\assets\vendor\isotope-layout\**" />
+    <None Remove="wwwroot\assets\vendor\php-email-form\**" />
+    <None Remove="wwwroot\assets\vendor\swiper\**" />
+    <None Remove="wwwroot\css\open-iconic\**" />
+    <None Remove="wwwroot\fonts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Product\Test.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BlazorInputFile" Version="0.2.0" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.0.0" />
+    <PackageReference Include="Radzen.Blazor" Version="4.23.3" />
+
+
+
+	  <PackageReference Include="Syncfusion.Blazor.Buttons" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Charts" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Core" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.DropDowns" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Grid" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Layouts" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Popups" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Spinner" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.SplitButtons" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Blazor.Themes" Version="23.1.36" />
+	  <PackageReference Include="Syncfusion.Licensing" Version="23.1.36" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Retail.Shared\Retail.Shared.csproj" />
+  </ItemGroup>
+
+</Project>

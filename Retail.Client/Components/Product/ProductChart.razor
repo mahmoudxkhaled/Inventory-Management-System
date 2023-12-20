@@ -1,0 +1,46 @@
+﻿@page "/ProductChart"
+
+<div class="row head" style="padding:0">
+
+    <div class="col-md-12 pb-4">
+        <h1 class="h1 grid-h1 text-center m-auto">Products Name VS QTY </h1>
+    </div>
+
+</div>
+<div Class="rz-p-0 rz-p-md-12">
+    <RadzenChart>
+        <RadzenColumnSeries Data="@revenue" CategoryProperty="Name" ValueProperty="Qty" />
+    </RadzenChart>
+</div>
+
+@code {
+    public List<ProductDto> ProductList;
+    DataItem[] revenue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        ProductList = await ProServ.GetAllProducts();
+        PopulateRevenueArray();
+    }
+
+    private void PopulateRevenueArray()
+    {
+        revenue = ProductList.Select(product => new DataItem
+            {
+                Name = GetFirstWord(product.NAME),  
+                Qty = product.QTY 
+            }).ToArray();
+        StateHasChanged();
+    }
+
+    private string GetFirstWord(string fullName)
+    {
+        return fullName?.Split(' ').FirstOrDefault() ?? string.Empty;
+    }
+
+    class DataItem
+    {
+        public string Name { get; set; }
+        public double Qty { get; set; }
+    }
+}

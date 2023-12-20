@@ -1,0 +1,45 @@
+﻿@using BlazorInputFile;
+@inject ProductService ProServ
+@inject CategoryService CatServ
+@layout RetailLayout
+
+<div class="col-md-12  align-content-center text-center">
+        <h1 class="h1 float-left grid-h1 align-content-center text-center">@curData.NAME</h1>
+    </div>
+<div Class="rz-p-0 rz-p-md-12">
+  
+    <RadzenCard Variant="@variant" Class="rz-my-12 rz-mx-auto "  >
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+            <RadzenStack Gap="0" >
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0 font" Style="color: brown;font-size:20px">ID</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@(curData.ID)</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0" Style="color: brown;font-size:20px">QTY</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@curData.QTY</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0" Style="color: brown;font-size:20px">Description</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@curData.DESCRIPTION</b></RadzenText>     
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0" Style="color: brown;font-size:20px">Price</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@curData.PRICE</b></RadzenText>
+                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0" Style="color: brown;font-size:20px">Category</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1"><b>@curData.CATEGORY_NAME</b></RadzenText>
+            </RadzenStack>
+        </RadzenStack>
+    </RadzenCard>
+</div>
+@code {
+
+    [Parameter]
+    public string ProductID { get; set; }
+    [Parameter]
+    public int EntryType { get; set; }
+
+    private ProductDto curData = new ProductDto();
+    Variant variant = Variant.Filled;
+
+    protected override async Task OnInitializedAsync()
+    {
+        StateHasChanged();
+
+        curData = await ProServ.GetProductById(Guid.Parse(ProductID));
+    }
+
+}
