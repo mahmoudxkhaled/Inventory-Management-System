@@ -15,10 +15,6 @@ Product Listings:
 
 Explore and showcase your products effortlessly. Add new products, edit details with ease, and keep your inventory up-to-date.
 
-Analytics and Trends: 
-
-Unlock powerful analytics tools to delve into your sales data. Identify top-performing products, analyze sales trends, and make informed decisions to boost your business.
-
 Showcase Your Products: 
 
 In addition to managing your retail operations, our website allows you to showcase your products to a wider audience. Enhance your online presence, attract customers, and drive sales by displaying your products with style.
